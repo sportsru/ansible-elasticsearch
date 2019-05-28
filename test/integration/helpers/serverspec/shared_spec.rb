@@ -90,6 +90,9 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
+  describe file('/etc/init.d/elasticsearch') do
+    it { should_not exist }
+  end
 
   describe file(family['defaults_path']) do
     its(:content) { should match '' }

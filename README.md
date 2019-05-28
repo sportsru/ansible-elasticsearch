@@ -249,6 +249,7 @@ An example of a three server deployment is shown below.  The first server holds 
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
+      cluster.name: "test-cluster"
     es_templates: false
     es_version_lock: false
     es_api_port: 9200
