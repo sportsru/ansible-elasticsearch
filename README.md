@@ -183,8 +183,8 @@ A more complex example:
 
 #### Important Note
 
-**The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates and to check the NODE IS ACTIVE.  These default to "localhost" and 9200 respectively.
-If the node is deployed to bind on either a different host or port, these must be changed.**
+**The role uses es_api_scheme, es_api_host and es_api_port to communicate with the node for actions only achievable via http/https e.g. to install templates and to check the NODE IS ACTIVE.  These default to "http", "localhost" and 9200 respectively.
+If the node is deployed to bind on either a different scheme, host or port, these must be changed.**
 
 ### Multi Node Server Installations
 
@@ -365,6 +365,7 @@ In addition to es_config, the following parameters allow the customization of th
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
 * ```es_version``` (e.g. "7.1.1").
+* ```es_api_scheme``` The scheme name used for actions requiring HTTP e.g. installing templates ("http" (default) or "https").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
