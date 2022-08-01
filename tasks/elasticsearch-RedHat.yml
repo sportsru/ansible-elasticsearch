@@ -27,7 +27,6 @@
 
 - name: RedHat - include versionlock
   include: elasticsearch-RedHat-version-lock.yml
-  when: es_version_lock
 
 - name: RedHat - Remove the other elasticsearch package if switching between OSS and standard
   become: yes
@@ -46,18 +45,24 @@
     state: present
     update_cache: yes
     allow_downgrade: '{{ allow_downgrade }}'
-  when: es_use_repository
+  when: es_use_repository and not ansible_check_mode
   register: redhat_elasticsearch_install_from_repo
   notify: restart elasticsearch
   until: redhat_elasticsearch_install_from_repo.rc == 0
   retries: 5
   delay: 10
   environment:
-    ES_PATH_CONF: "/etc/elasticsearch"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+
+# workaround due to https://github.com/ansible/ansible/issues/66977
+- set_fact:
+    es_rpm_url: "{% if es_version is version('7.0.0', '>=') %}{{ es_package_url }}-{{ es_version }}-x86_64.rpm{% else %}{{ es_package_url }}-{{ es_version }}.rpm{% endif %}"
 
 - name: RedHat - Install Elasticsearch from url
   become: yes
-  yum: name={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}.noarch.rpm{% endif %} state=present
+  yum:
+    name: '{% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_rpm_url }}{% endif %}'
+    state: present
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
